@@ -103,3 +103,22 @@ export function strToTerm (str: string): Term {
     power: Number(power)
   };
 }
+
+export function eqToHtml (eq: Equation): string {
+  if (typeof eq.left === 'number') {
+    return String(eq.left);
+  }
+  let out = variableToHtml(<Variable>eq.left);
+  if (eq.right) {
+    let op = eq.operator === Op.Plus ? '+' : '-';
+    out += ' ' + op + ' ' + eqToHtml(eq.right);
+  }
+  return out;
+}
+
+export function variableToHtml (v: Variable): string {
+  let coefficient = v.coefficient === 1 ? '' : String(v.coefficient);
+  let variable = v.variable;
+  let power = v.power === 1 ? '' : (v.power ? '<sup>' + v.power + '</sup>' : '');
+  return coefficient + variable + power;
+}
