@@ -8,6 +8,17 @@ export interface Variable {
   power: number;
 }
 
+export type Constant = number;
+
+export type Term = Variable|Constant;
+
+export interface Equation {
+  left: Term;
+  operator?: Op;
+  right?: Equation;
+}
+
+
 // helper to create a Variable
 export function v (
   coefficient: number,
@@ -18,16 +29,6 @@ export function v (
     variable: variable,
     power: power
   };
-}
-
-export type Constant = number;
-
-export type Term = Variable|Constant;
-
-export interface Equation {
-  left: Term;
-  operator?: Op;
-  right?: Equation;
 }
 
 // helper to create an Equation
@@ -44,4 +45,3 @@ export function eq (
   }
   return {left: left, operator: null, right: null};
 }
-
