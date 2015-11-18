@@ -1,0 +1,15 @@
+{
+  "name": "equations",
+  "version": "0.0.0",
+  "description": "Does stuff with equations",
+  "author": "Andrew Peace <andrew@coo.pe>",
+  "dependencies": {},
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "http-server": "^0.8.5",
+    "mocha": "^2.3.3",
+    "tsd": "^0.6.5",
+    "typescript": "^1.6.2",
+    "watchify": "^3.6.0"
+  }
+}
