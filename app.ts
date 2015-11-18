@@ -1,16 +1,17 @@
 
-import equation = require('./lib/equation');
+import e = require('./lib/equation');
+import str = require('./lib/str');
 
 let input = <HTMLInputElement>(document.getElementById('equation'));
 let output = <HTMLElement>(document.getElementById('output'));
 
 input.addEventListener('keyup', () => {
-  let str = input.value;
-  let parsed: equation.Equation;
+  let inputStr = input.value;
+  let parsed: e.Equation;
   let html: string;
   try {
-    parsed = equation.strToEq(str);
-    html = equation.eqToHtml(parsed);
+    parsed = str.strToEq(inputStr);
+    html = str.eqToHtml(parsed);
   } catch (e) {
     output.innerHTML = e.message;
     return;

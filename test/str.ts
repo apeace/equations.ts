@@ -2,17 +2,18 @@
 
 import expect = require('expect.js');
 
-import equation = require('../lib/equation');
+import e = require('../lib/equation');
+import str = require('../lib/str');
 
-describe('Equation', () => {
+describe('str', () => {
 
-  let Op = equation.Op;
-  let v = equation.v;
-  let eq = equation.eq;
+  let Op = e.Op;
+  let v = e.v;
+  let eq = e.eq;
 
   describe('strToEq', () => {
 
-    let strToEq = equation.strToEq;
+    let strToEq = str.strToEq;
 
     it('Detects errors', () => {
       let testError = (str: string, err: RegExp) => {
