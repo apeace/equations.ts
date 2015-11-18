@@ -39,7 +39,7 @@ export function strToEq (str: string): e.Equation {
 
 const constRegexp = /^\d+$/;
 const varRegexp = /^(\d*)(x)(\^\d+)?$/;
-export function strToTerm (str: string): e.Term {
+function strToTerm (str: string): e.Term {
   let match = str.match(constRegexp);
   if (match) {
     return Number(str);
@@ -70,7 +70,7 @@ export function eqToHtml (eq: e.Equation): string {
   return out;
 }
 
-export function variableToHtml (v: e.Variable): string {
+function variableToHtml (v: e.Variable): string {
   let coefficient = v.coefficient === 1 ? '' : String(v.coefficient);
   let variable = v.variable;
   let power = v.power === 1 ? '' : (v.power ? '<sup>' + v.power + '</sup>' : '');
