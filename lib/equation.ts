@@ -1,19 +1,19 @@
 
-export enum Operator {
+export enum Op {
   Plus, Minus
 }
 
-export interface EquationVariable {
+export interface Variable {
   coefficient: number;
   variable: string;
   power: number;
 }
 
-// helper to create an EquationVariable
-export function variable (
+// helper to create a Variable
+export function v (
   coefficient: number,
   variable: string,
-  power: number): EquationVariable {
+  power: number): Variable {
   return {
     coefficient: coefficient,
     variable: variable,
@@ -21,20 +21,20 @@ export function variable (
   };
 }
 
-export type EquationConstant = number;
+export type Constant = number;
 
-export type EquationTerm = EquationVariable|EquationConstant;
+export type Term = Variable|Constant;
 
 export interface Equation {
-  left: EquationTerm;
-  operator?: Operator;
+  left: Term;
+  operator?: Op;
   right?: Equation;
 }
 
 // helper to create an Equation
-export function equation (
-  left: EquationTerm,
-  operator?: Operator,
+export function eq (
+  left: Term,
+  operator?: Op,
   right?: Equation): Equation {
   if (operator !== null && operator !== undefined) {
     return {
@@ -49,13 +49,13 @@ export function equation (
 // turn a string like '4x^2 + 3x + 2' into an equation
 let termRegexp = /^([^+-\s]+)\s*([+-])?\s*/;
 export function strToEq (str: string): Equation {
-  let terms: EquationTerm[] = [];
-  let ops: Operator[] = [];
+  let terms: Term[] = [];
+  let ops: Op[] = [];
   let match = str.match(termRegexp);
   while (match) {
     terms.push(strToTerm(match[1]));
     if (match[2]) {
-      ops.push(match[2] === '+' ? Operator.Plus : Operator.Minus);
+      ops.push(match[2] === '+' ? Op.Plus : Op.Minus);
     }
     str = str.substring(match[0].length);
     match = str.match(termRegexp);
@@ -85,7 +85,7 @@ export function strToEq (str: string): Equation {
 
 const constRegexp = /^\d+$/;
 const varRegexp = /^(\d*)(x)(\^\d+)?$/;
-export function strToTerm (str: string): EquationTerm {
+export function strToTerm (str: string): Term {
   let match = str.match(constRegexp);
   if (match) {
     return Number(str);
