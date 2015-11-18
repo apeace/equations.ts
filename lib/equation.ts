@@ -47,33 +47,26 @@ export function equation (
 }
 
 // turn a string like '4x^2 + 3x + 2' into an equation
+let termRegexp = /^([^+-\s]+)\s*([+-])?\s*/;
 export function strToEq (str: string): Equation {
   let terms: EquationTerm[] = [];
   let ops: Operator[] = [];
-  let term = '';
-  for (let i = 0; i < str.length; i++) {
-    let char = str[i];
-    if (char === ' ') {
-      continue;
+  let match = str.match(termRegexp);
+  while (match) {
+    terms.push(strToTerm(match[1]));
+    if (match[2]) {
+      ops.push(match[2] === '+' ? Operator.Plus : Operator.Minus);
     }
-    else if (char === '+' || char === '-') {
-      terms.push(strToTerm(term));
-      ops.push(char === '+' ? Operator.Plus : Operator.Minus);
-      term = '';
-    }
-    else {
-      term += char;
-    }
+    str = str.substring(match[0].length);
+    match = str.match(termRegexp);
   }
-  if (term !== '') {
-    terms.push(strToTerm(term));
+  if (str.length !== 0) {
+    throw new Error('Unable to parse the rest of the equation: ' + str);
   }
-  let eq: Equation = {left: terms[0]};
+
+  let eq: Equation = {left: terms[0], operator: null, right: null};
   let leftSide = eq;
   for (let i = 1; i < terms.length; i++) {
-    if (ops.length === 0) {
-      throw new Error('Not enough operators');
-    }
     leftSide.operator = ops.shift();
     let newLeftSide: Equation = {
       left: terms[i],
@@ -83,28 +76,30 @@ export function strToEq (str: string): Equation {
     leftSide.right = newLeftSide;
     leftSide = newLeftSide;
   }
+  if (ops.length > 0) {
+    throw new Error('Too many operators');
+  }
+
   return eq;
 }
 
-const termRegexp = /(\d*)(x?)(\^?)(\d*)/;
+const constRegexp = /^\d+$/;
+const varRegexp = /^(\d*)(x)(\^\d+)?$/;
 export function strToTerm (str: string): EquationTerm {
-  let match = str.match(termRegexp);
+  let match = str.match(constRegexp);
+  if (match) {
+    return Number(str);
+  }
+  match = str.match(varRegexp);
   if (!match) {
     throw new Error('Unrecognized term: ' + str);
   }
   let coefficient = match[1];
   let variable = match[2];
-  let carat = match[3];
-  let power = match[4];
-  if (!variable && (carat || power)) {
-    throw new Error('Power without variable: ' + str);
-  }
-  if (!variable) {
-    return Number(coefficient);
-  }
+  let power = match[3] ? match[3].substring(1) : 1;
   return {
     coefficient: Number(coefficient),
     variable: variable,
-    power: Number(power) || 1
+    power: Number(power)
   };
 }
